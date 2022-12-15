@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" width="500" height="500" style="background-color: #DEF5E5;"></canvas>
+
+    <script>
+        var canvas = document.getElementById("canvas");
+        var clk= canvas.getContext("2d");
+        var radius=canvas.height/2;
+        clk.translate(radius,radius);
+        radius=radius*0.9;
+        drawclock();
+        setInterval(drawclock,1000);
+
+        function drawclock(){
+            drawFace(clk,radius);
+            Num(clk,radius);
+            HAnds(clk,radius);
+        }
+
+        function drawFace(clk,radius){
+            var gradient;
+            clk.beginPath();
+            clk.arc(0,0,radius,0,2*Math.PI);
+            clk.fillStyle = "white";
+            clk.fill();
+
+            gradient=clk.createRadialGradient(0,0,radius*0.95,0,0,radius*1.05);
+            gradient.addColorStop(0,'#0E5E6F');
+            gradient.addColorStop(0.5,'#3A8891');
+            gradient.addColorStop(1,'#0E5E6F');
+            clk.strokeStyle = gradient;
+            clk.lineWidth = radius*0.1;
+            clk.stroke();
+
+            clk.beginPath();
+            clk.arc(0,0,radius*0.1,0,2*Math.PI);
+            clk.fillStyle = '#0E5E6F';
+            clk.fill();
+        }
+
+            function Num(clk,radius){
+                var angle;
+                var num;
+                clk.font = radius*0.2 + "px algerian";
+                clk.textBaseline = "middle";
+                clk.textAlign = "center";
+                for(num = 1; num<13;num++){
+                    angle =num*Math.PI/6;
+                    clk.rotate(angle);
+                    clk.translate(0,-radius*0.8);
+                    clk.rotate(-angle);
+                    clk.fillText(num.toString(),0,0);
+                    clk.rotate(angle);
+                    clk.translate(0,radius*0.8);
+                    clk.rotate(-angle);
+                }
+            }
+
+        function HAnds(clk,radius){
+            var time= new Date();
+            var hour= time.getHours();
+            var min = time.getMinutes();
+            var sec = time.getSeconds();
+            //converting acc to clock 
+            let second = sec*Math.PI/30;
+            drawhands(clk,radius*0.85,radius*0.02,second);
+
+            let minute=(min*Math.PI/30) +(sec*Math.PI/1800);
+            drawhands(clk,radius*0.7,radius*0.05,minute)
+
+            let hours=(hour*Math.PI/6)+(min*Math.PI/360) +(sec*Math.PI/(360*6));
+            drawhands(clk,radius*0.45,radius*0.075,hours)
+
+            function drawhands(clk, length, width, ang) {
+                clk.beginPath();
+                clk.lineWidth = width;
+                clk.lineCap = "round";
+                clk.moveTo(0, 0);
+                clk.rotate(ang);
+                clk.lineTo(0, -length);
+                clk.stroke();
+                clk.rotate(-ang);
+            }
+            
+        }   
+    </script>
+</body>
+</html>
